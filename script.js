@@ -1,17 +1,21 @@
 document.getElementById('time-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const startTime = '04:00'; // Fixed start time
-    const endTime = '16:00'; // Fixed end time
+    const startTime = document.getElementById('start-time').value;
+    const endTime = document.getElementById('end-time').value;
     const numLoads = parseInt(document.getElementById('num-loads').value, 10);
 
-    if (isNaN(numLoads) || numLoads <= 0) {
-        alert('Please enter a valid number of loads.');
+    if (!startTime || !endTime || isNaN(numLoads) || numLoads <= 0) {
+        alert('Please enter valid inputs.');
         return;
     }
 
     const start = new Date(`1970-01-01T${startTime}:00`);
-    const end = new Date(`1970-01-01T${endTime}:00`);
+    let end = new Date(`1970-01-01T${endTime}:00`); // End time on the same day as start time
+    if (end < start) {
+        end.setDate(end.getDate() + 1); // If end time is before start time, move end time to the next day
+    }
+
     const totalMinutes = (end - start) / (1000 * 60);
     const avgLoadDuration = totalMinutes / numLoads;
 
